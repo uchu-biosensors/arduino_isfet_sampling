@@ -54,7 +54,7 @@ void loop() {
   check_for_stop();
   read_analog_vals();
   send_vals_to_serial();
-  delay(sampling_delay);
+  delay(sampling_delay - 20);
 }
 
 /*
@@ -85,7 +85,7 @@ void get_form_of_data() {
 void get_sampling_delay() {
   String sampling_delay_string = "";
   do {
-    Serial.println("Enter delay between ISFET samples (ms): ");
+    Serial.println("Enter delay between ISFET samples in ms (> 20 ms): ");
     while(Serial.available() == 0) {} // wait for user input
     while(Serial.available() > 0) {
        sampling_delay_string = Serial.readString();
@@ -93,6 +93,9 @@ void get_sampling_delay() {
     sampling_delay = sampling_delay_string.toInt();
     if (sampling_delay == 0) {
       Serial.println("You have entered an invalid delay. Please use milliseconds.");
+    }
+    else if (sampling_delay < 20) {
+      Serial.println("Please enter a value equal to or greater than 20 ms.");
     }
   } while (sampling_delay == 0); 
 }
