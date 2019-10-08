@@ -1,4 +1,4 @@
-This repository stores an Arduino program to sample data for ISFET testing. Data is transmitted to a Raspberry Pi or ser    ial monitor using serial communication. The program accepts user input to set sampling rate and form of data to transmit    , as ADC output, millivolt results, or both. Data is transmitted in .csv format.
+This repository stores an Arduino program to sample data for ISFET testing. Data is transmitted to a Raspberry Pi or ser    ial monitor using serial communication. The program accepts user input to set sampling rate and form of data to transmit as ADC output, millivolt results, or both. Data is transmitted in .csv format.
   
 Data is reported in the following format for ADC or millivolt results:
   
