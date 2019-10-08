@@ -43,7 +43,6 @@ void clear_analog_values();
  */
  
 void setup() {
-  //analogReference(EXTERNAL);
   Serial.begin(9600); // begin transmission
   while(!Serial) {} // wait for serial
   get_sampling_delay();
@@ -99,7 +98,7 @@ void get_sampling_delay() {
 
 void read_analog_vals() {
   // Average 10 analog readings
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 30; i++) {
     vsd_adc   += analogRead(VSD);
     vplus_adc += analogRead(VPLUS);
     vout_adc  += analogRead(VOUT);
@@ -107,12 +106,12 @@ void read_analog_vals() {
     temp_adc  += analogRead(TEMP);
     gnd_adc   += analogRead(GND);
   }
-  vsd_adc   = vsd_adc / 10;
-  vplus_adc = vplus_adc / 10;
-  vout_adc  = vout_adc / 10;
-  isd_adc   = isd_adc / 10;
-  temp_adc  = temp_adc / 10;
-  gnd_adc   = gnd_adc / 10;    
+  vsd_adc   = vsd_adc / 30;
+  vplus_adc = vplus_adc / 30;
+  vout_adc  = vout_adc / 30;
+  isd_adc   = isd_adc / 30;
+  temp_adc  = temp_adc / 30;
+  gnd_adc   = gnd_adc / 30;    
 }
 
 void send_vals_to_serial() {
