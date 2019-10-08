@@ -43,6 +43,7 @@ void clear_analog_values();
  */
  
 void setup() {
+  analogReference(DEFAULT);
   Serial.begin(9600); // begin transmission
   while(!Serial) {} // wait for serial
   get_sampling_delay();
