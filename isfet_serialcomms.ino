@@ -7,9 +7,9 @@
 #define GND   A5
 
 // Variables to store adc results in 
-int vsd_adc, vplus_adc, vout_adc, isd_adc, temp_adc, gnd_adc;
+int vsd_adc, vplus_adc, vout_adc, isd_adc, temp_adc, gnd_adc = 0;
 // Variables to store millivolt results in 
-int vsd_mv, vplus_mv, vout_mv, isd_mv, temp_mv, gnd_mv;
+int vsd_mv, vplus_mv, vout_mv, isd_mv, temp_mv, gnd_mv = 0;
 
 // Frequency to record data 
 int sampling_delay;
@@ -35,13 +35,15 @@ void print_mv();
 void print_both();
 // "Stops" the arduino until it is reset
 void check_for_stop();
+// Reset analog values to zero
+void clear_analog_values();
 
 /*
  *  Setup and Loop
  */
  
 void setup() {
-  analogReference(EXTERNAL);
+  //analogReference(EXTERNAL);
   Serial.begin(9600); // begin transmission
   while(!Serial) {} // wait for serial
   get_sampling_delay();
@@ -96,13 +98,21 @@ void get_sampling_delay() {
 }
 
 void read_analog_vals() {
-  // Continually read analog data and print to serial
-  vsd_adc   = analogRead(VSD);
-  vplus_adc = analogRead(VPLUS);
-  vout_adc  = analogRead(VOUT);
-  isd_adc   = analogRead(ISD);
-  temp_adc  = analogRead(TEMP);
-  gnd_adc   = analogRead(GND);  
+  // Average 10 analog readings
+  for (int i = 0; i < 10; i++) {
+    vsd_adc   += analogRead(VSD);
+    vplus_adc += analogRead(VPLUS);
+    vout_adc  += analogRead(VOUT);
+    isd_adc   += analogRead(ISD);
+    temp_adc  += analogRead(TEMP);
+    gnd_adc   += analogRead(GND);
+  }
+  vsd_adc   = vsd_adc / 10;
+  vplus_adc = vplus_adc / 10;
+  vout_adc  = vout_adc / 10;
+  isd_adc   = isd_adc / 10;
+  temp_adc  = temp_adc / 10;
+  gnd_adc   = gnd_adc / 10;    
 }
 
 void send_vals_to_serial() {
@@ -118,12 +128,12 @@ void send_vals_to_serial() {
 }
 
 void calc_mv_from_adc() {
-  vsd_mv   = vsd_adc * (3.3/1023.0) * 1000;
-  vplus_mv = vplus_adc * (3.3/1023.0) * 1000;
-  vout_mv  = vout_adc * (3.3/1023.0) * 1000;
-  isd_mv   = isd_adc * (3.3/1023.0) * 1000;
-  temp_mv  = temp_adc * (3.3/1023.0) * 1000;
-  gnd_mv   = gnd_adc * (3.3/1023.0) * 1000;
+  vsd_mv   = vsd_adc * (5.0/1023.0) * 1000;
+  vplus_mv = vplus_adc * (5.0/1023.0) * 1000;
+  vout_mv  = vout_adc * (5.0/1023.0) * 1000;
+  isd_mv   = isd_adc * (5.0/1023.0) * 1000;
+  temp_mv  = temp_adc * (5.0/1023.0) * 1000;
+  gnd_mv   = gnd_adc * (5.0/1023.0) * 1000;
 }
 
 void print_adc() {
@@ -191,4 +201,13 @@ void check_for_stop() {
       input = Serial.readString();
     }
     if(input.equals("stop\n")) {while (true) {}}  
+}
+
+void clear_analog_values() {
+  vsd_adc   = 0;
+  vplus_adc = 0;
+  vout_adc  = 0;
+  isd_adc   = 0;
+  temp_adc  = 0;
+  gnd_adc   = 0;     
 }
